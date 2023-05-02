@@ -4,7 +4,7 @@
 			<div class="ms-title">后台管理系统</div>
 			<el-form :model="param" :rules="rules" ref="login" label-width="0px" class="ms-content">
 				<el-form-item prop="username">
-					<el-input v-model="param.username" placeholder="username">
+					<el-input v-model="param.username">
 						<template #prepend>
 							<el-button :icon="User"></el-button>
 						</template>
@@ -13,7 +13,6 @@
 				<el-form-item prop="password">
 					<el-input
 						type="password"
-						placeholder="password"
 						v-model="param.password"
 						@keyup.enter="submitForm(login)"
 					>
@@ -25,7 +24,6 @@
 				<div class="login-btn">
 					<el-button type="primary" @click="submitForm(login)">登录</el-button>
 				</div>
-				<p class="login-tips">Tips : 用户名和密码随便填。</p>
 			</el-form>
 		</div>
 	</div>
@@ -39,7 +37,7 @@ import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import type { FormInstance, FormRules } from 'element-plus';
 import { Lock, User } from '@element-plus/icons-vue';
-
+import { adminLogin } from '../api/login';
 interface LoginInfo {
 	username: string;
 	password: string;
@@ -47,9 +45,15 @@ interface LoginInfo {
 
 const router = useRouter();
 const param = reactive<LoginInfo>({
-	username: 'admin',
-	password: '123123'
+	username: '',
+	password: ''
 });
+const state = ref(false);
+const Login = () => {
+	adminLogin(param.username, param.password).then((res) => {
+		state.value = res.data;
+	 });
+}
 
 const rules: FormRules = {
 	username: [
@@ -61,27 +65,21 @@ const rules: FormRules = {
 	],
 	password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
 };
-const permiss = usePermissStore();
 const login = ref<FormInstance>();
 const submitForm = (formEl: FormInstance | undefined) => {
+	Login()
+	console.log(state.value)
 	if (!formEl) return;
 	formEl.validate((valid: boolean) => {
-		if (valid) {
+		if (state.value) {
 			ElMessage.success('登录成功');
-			localStorage.setItem('ms_username', param.username);
-			const keys = permiss.defaultList[param.username == 'admin' ? 'admin' : 'user'];
-			permiss.handleSet(keys);
-			localStorage.setItem('ms_keys', JSON.stringify(keys));
 			router.push('/');
 		} else {
-			ElMessage.error('登录成功');
+			ElMessage.error('登录失败');
 			return false;
 		}
 	});
 };
-
-const tags = useTagsStore();
-tags.clearTags();
 </script>
 
 <style scoped>
@@ -120,10 +118,5 @@ tags.clearTags();
 	width: 100%;
 	height: 36px;
 	margin-bottom: 10px;
-}
-.login-tips {
-	font-size: 12px;
-	line-height: 30px;
-	color: #fff;
 }
 </style>
