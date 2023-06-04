@@ -18,5 +18,14 @@ export default defineConfig({
 	],
 	optimizeDeps: {
 		include: ['schart.js']
-	}
+	},
+	build: {
+		target: 'modules', 
+		outDir: 'dist', 
+		assetsDir: 'assets', 
+		sourcemap: false,
+		minify: 'esbuild',
+		chunkSizeWarningLimit: 1000, 
+		cssTarget: 'chrome61' 
+	  }
 });

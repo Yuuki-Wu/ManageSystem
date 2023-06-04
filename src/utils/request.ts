@@ -1,7 +1,7 @@
 import axios, {AxiosInstance, AxiosError, AxiosResponse, AxiosRequestConfig} from 'axios';
 
 const service: AxiosInstance = axios.create({
-    baseURL: 'http://192.168.1.107:920',
+    baseURL: 'http://localhost:920',
     timeout: 5000
 });
 

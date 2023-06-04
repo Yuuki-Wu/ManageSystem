@@ -54,7 +54,7 @@ const Login = () => {
 		state.value = res.data;
 	 });
 }
-
+Login();
 const rules: FormRules = {
 	username: [
 		{
@@ -65,21 +65,27 @@ const rules: FormRules = {
 	],
 	password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
 };
+const permiss = usePermissStore();
 const login = ref<FormInstance>();
 const submitForm = (formEl: FormInstance | undefined) => {
 	Login()
-	console.log(state.value)
-	if (!formEl) return;
-	formEl.validate((valid: boolean) => {
+	setTimeout(() => {
+		if (!formEl) return;
+	formEl.validate(() => {
 		if (state.value) {
 			ElMessage.success('登录成功');
+			localStorage.setItem('ms_username', param.username);
 			router.push('/');
 		} else {
 			ElMessage.error('登录失败');
 			return false;
 		}
-	});
+	})
+	}, 500);
+	;
 };
+const tags = useTagsStore();
+tags.clearTags();
 </script>
 
 <style scoped>

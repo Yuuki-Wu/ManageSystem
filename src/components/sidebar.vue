@@ -10,30 +10,14 @@
             unique-opened
             router
         >
-            <template v-for="item in items">
-                <template v-if="item.subs">
+        <template v-for="item in items">
+                <template v-if="false">
                     <el-sub-menu :index="item.index" :key="item.index" v-permiss="item.permiss">
                         <template #title>
                             <el-icon>
                                 <component :is="item.icon"></component>
                             </el-icon>
                             <span>{{ item.title }}</span>
-                        </template>
-                        <template v-for="subItem in item.subs">
-                            <el-sub-menu
-                                v-if="subItem.subs"
-                                :index="subItem.index"
-                                :key="subItem.index"
-                                v-permiss="item.permiss"
-                            >
-                                <template #title>{{ subItem.title }}</template>
-                                <el-menu-item v-for="(threeItem, i) in subItem.subs" :key="i" :index="threeItem.index">
-                                    {{ threeItem.title }}
-                                </el-menu-item>
-                            </el-sub-menu>
-                            <el-menu-item v-else :index="subItem.index" v-permiss="item.permiss">
-                                {{ subItem.title }}
-                            </el-menu-item>
                         </template>
                     </el-sub-menu>
                 </template>
@@ -67,8 +51,7 @@ const items = [
         index: '/table',
         title: '反馈信息',
         permiss: '2',
-        
-    }
+    },
 ];
 
 const route = useRoute();
